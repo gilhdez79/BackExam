@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ApiExamen.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/tienda")]
 
     public class TiendaController : ControllerBase
     {

@@ -18,13 +18,19 @@ namespace ApiExamen.BsLayer
             _dbCntext = dbcontext;
         }
 
-        public OperationResult<Data.Tienda> InsetTienda(Data.Tienda articulo)
+        public OperationResult<Data.Tienda> InsetTienda(Data.Tienda tienda)
         {
             try
             {
-                var existe = _dbCntext.Tienda.Find(articulo.Id);
 
-                _dbCntext.Tienda.Add(articulo);
+                _dbCntext.Tienda.Add(new Data.Tienda
+                {
+                    Sucursal = tienda.Sucursal,
+                    Direccion = tienda.Direccion
+                });
+                
+                
+                
                 _dbCntext.SaveChanges();
 
                 operationResult.Success = true;
