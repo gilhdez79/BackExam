@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Server.IISIntegration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,12 +45,13 @@ namespace ApiExamen
                 options.AddPolicy(name: "AllowOrigin",
                     builder =>
                     {
-                        builder.WithOrigins("https://localhost:44300", "http://localhost:4200")
+                        builder.WithOrigins( "http://localhost:4200")
                                             .AllowAnyHeader()
-                                            .AllowAnyMethod();
+                                            .AllowAnyMethod()
+                                            .AllowCredentials();
                     });
             });
-
+            services.AddAuthentication(IISDefaults.AuthenticationScheme);
 
 
         }
@@ -57,6 +59,8 @@ namespace ApiExamen
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors("AllowOrigin");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -74,7 +78,7 @@ namespace ApiExamen
             {
                 endpoints.MapControllers();
             });
-            app.UseCors("AllowOrigin");
+            
         }
     }
 }

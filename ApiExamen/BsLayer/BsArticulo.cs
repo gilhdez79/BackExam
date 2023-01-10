@@ -25,9 +25,25 @@ namespace ApiExamen.BsLayer
         {
             try
             {
-                var existe = _dbCntext.Articulos.Find(articulo.Id);
+                ArticuloResponse aresp = new ArticuloResponse()
+                {
+                    CodigoCn = articulo.CodigoCn,
+                    Descripcion = articulo.Descripcion,
+                    Imagen = articulo.Imagen,
+                    Precio =   articulo.Precio,
+                    Stock = articulo.Stock
 
-                _dbCntext.Articulos.Add(articulo);
+
+                };
+                
+
+                _dbCntext.Articulos.Add( new Articulo {
+                    CodigoCn = articulo.CodigoCn,
+                    Descripcion = articulo.Descripcion,
+                    Imagen = articulo.Imagen,
+                    Precio = articulo.Precio,
+                    Stock = articulo.Stock
+                });
                 _dbCntext.SaveChanges();
 
                 operationResult.Success = true;

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ApiExamen.BsLayer;
+using Microsoft.AspNetCore.Cors;
 
 namespace ApiExamen.Controllers
 {
@@ -26,6 +27,7 @@ namespace ApiExamen.Controllers
             var datos = _db.Articulos.ToList();
             return Ok(datos);
         }
+    
         [HttpPost]
         public IActionResult InsertaArticulo([FromBody] Data.Articulo articulo)
         {
