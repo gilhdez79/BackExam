@@ -29,6 +29,7 @@ namespace ApiExamen.Controllers
         }
     
         [HttpPost]
+        [EnableCors("AllowOrigin")]
         public IActionResult InsertaArticulo([FromBody] Data.Articulo articulo)
         {
             var result = bsArticulo.InsetArticulo(articulo);
@@ -43,9 +44,10 @@ namespace ApiExamen.Controllers
             return Ok(result);
         }
         [HttpDelete]
-        public IActionResult DeleteArticulo([FromBody] Data.Articulo articulo)
+        [HttpDelete("{id:int}")]
+        public IActionResult DeleteArticulo(int id)
         {
-            var result = bsArticulo.UpdateArticulo(articulo);
+            var result = bsArticulo.DeleteArticulo(id);
 
             return Ok(result);
         }
