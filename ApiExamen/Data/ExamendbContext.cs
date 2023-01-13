@@ -22,6 +22,8 @@ namespace ApiExamen.Data
         public virtual DbSet<Cliente> Clientes { get; set; }
         public virtual DbSet<ClienteArticulo> ClienteArticulos { get; set; }
         public virtual DbSet<Tienda> Tienda { get; set; }
+        public virtual DbSet<User> User { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -125,6 +127,18 @@ namespace ApiExamen.Data
 
                 entity.Property(e => e.Sucursal)
                     .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Id)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Password)
+                    .HasMaxLength(10)
                     .IsUnicode(false);
             });
 
