@@ -29,7 +29,15 @@ namespace ApiExamen
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-        services.AddControllers();
+            services.AddControllers();
+            services.AddControllers(options =>
+            {
+                var jsonInputFormatter = options.InputFormatters
+                    .OfType<Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonInputFormatter>()
+                    .Single();
+                jsonInputFormatter.SupportedMediaTypes.Add("application/csp-report");
+            }
+ );
             services.AddDbContext<Data.ExamendbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("ConnDbExamen"));
@@ -48,11 +56,14 @@ namespace ApiExamen
                         builder.WithOrigins( "http://localhost:4200")
                                             .AllowAnyHeader()
                                             .AllowAnyMethod()
+                                            .SetIsOriginAllowed((host) => true)
                                             .AllowCredentials();
                     });
             });
             services.AddAuthentication(IISDefaults.AuthenticationScheme);
 
+            services.AddCors(); // Make sure you call this previous to AddMvc
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
         }
 
