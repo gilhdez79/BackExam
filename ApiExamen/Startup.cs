@@ -78,6 +78,7 @@ namespace ApiExamen
             {
                 endpoints.MapControllers();
             });
+           // app.("http://localhost:4200/", "*", "*");
             
         }
     }
