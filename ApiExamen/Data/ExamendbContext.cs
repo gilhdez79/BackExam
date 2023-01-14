@@ -22,7 +22,7 @@ namespace ApiExamen.Data
         public virtual DbSet<Cliente> Clientes { get; set; }
         public virtual DbSet<ClienteArticulo> ClienteArticulos { get; set; }
         public virtual DbSet<Tienda> Tienda { get; set; }
-        public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<User> Users { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

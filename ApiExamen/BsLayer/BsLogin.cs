@@ -21,7 +21,7 @@ namespace ApiExamen.BsLayer
         {
             try
             {
-                var existe = _dbCntext.User.FirstOrDefault(u=>u.IdUser.Equals(user.IdUser) && u.Password.Equals(user.Password));
+                var existe = _dbCntext.Users.FirstOrDefault(u=>u.IdUser.Equals(user.IdUser) && u.Password.Equals(user.Password));
 
                 if (existe != null)
                 {

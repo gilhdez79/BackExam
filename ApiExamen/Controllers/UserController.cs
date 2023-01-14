@@ -32,7 +32,8 @@ namespace ApiExamen.Controllers
             return Ok();
         }
         [HttpPost]
-        [Route("/login")]   
+      
+        [Route("login")]   
         public IActionResult Login([FromBody] User user)
         {
             var result = bsLogin.GetCUser(user);
