@@ -1,5 +1,6 @@
 ﻿using ApiExamen.BsLayer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,9 +29,14 @@ namespace ApiExamen.Controllers
         [HttpPost]
         public IActionResult InsertaTienda([FromBody] Data.Tienda tienda)
         {
-            var result = bsTienda.InsetTienda(tienda);
+            if (ModelState.IsValid)
+            {
+                var result = bsTienda.InsetTienda(tienda);
 
-            return Ok(result);
+                return Ok(result); 
+            }
+
+            return BadRequest();
         }
         [HttpPut]
         public IActionResult UpdateTienda([FromBody] Data.Tienda tienda)

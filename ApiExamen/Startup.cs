@@ -1,5 +1,8 @@
+using ApiExamen.Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.IISIntegration;
@@ -8,10 +11,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Octopus.Client.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ApiExamen
@@ -60,10 +66,32 @@ namespace ApiExamen
                                             .AllowCredentials();
                     });
             });
-            services.AddAuthentication(IISDefaults.AuthenticationScheme);
+            //services.AddAuthentication(IISDefaults.AuthenticationScheme);
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
+                options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration["Jwt:Issuer"],
+                        ValidAudience = Configuration["Jwt:Issuer"],
+                        IssuerSigningKey = new
+                        SymmetricSecurityKey
+                        (Encoding.UTF8.GetBytes
+                        (Configuration["Jwt:Key"]))
+                    };
+                }
+                );
+
 
             services.AddCors(); // Make sure you call this previous to AddMvc
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddTransient<IUserRepositorys, UserRepository>();
+            services.AddTransient<ITokenService, TokenService>();
+
 
         }
 
@@ -89,8 +117,18 @@ namespace ApiExamen
             {
                 endpoints.MapControllers();
             });
-           // app.("http://localhost:4200/", "*", "*");
-            
+            // app.("http://localhost:4200/", "*", "*");
+
+            app.Use(async (context, next) =>
+            {
+                var token = context.Session.GetString("Token");
+                if (!string.IsNullOrEmpty(token))
+                {
+                    context.Request.Headers.Add("Authorization", "Bearer " + token);
+                }
+                await next();
+            });
+
         }
     }
 }

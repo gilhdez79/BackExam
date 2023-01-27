@@ -32,9 +32,14 @@ namespace ApiExamen.Controllers
         [EnableCors("AllowOrigin")]
         public IActionResult InsertaArticulo([FromBody] Data.Articulo articulo)
         {
-            var result = bsArticulo.InsetArticulo(articulo);
+            if (ModelState.IsValid)
+            {
+                var result = bsArticulo.InsetArticulo(articulo);
 
-            return Ok(result);
+                return Ok(result); 
+            }
+
+            return BadRequest();
         }
         [HttpPut]
         public IActionResult UpdateArticulo([FromBody] Data.Articulo articulo)

@@ -31,8 +31,7 @@ namespace ApiExamen.Controllers
         {
             return Ok();
         }
-        [HttpPost]
-      
+        [HttpPost]      
         [Route("login")]   
         public IActionResult Login([FromBody] User user)
         {
