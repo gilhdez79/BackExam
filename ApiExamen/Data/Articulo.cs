@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 #nullable disable
 
@@ -8,7 +7,6 @@ namespace ApiExamen.Data
 {
     public partial class Articulo
     {
-        [Key]
         public int Id { get; set; }
         public string CodigoCn { get; set; }
         public string Descripcion { get; set; }

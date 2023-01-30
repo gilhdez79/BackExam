@@ -67,13 +67,16 @@ namespace ApiExamen
                     });
             });
             //services.AddAuthentication(IISDefaults.AuthenticationScheme);
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(
                 options =>
                 {
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
-                        ValidateAudience = true,
+                        ValidateAudience = false,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = Configuration["Jwt:Issuer"],
@@ -81,7 +84,7 @@ namespace ApiExamen
                         IssuerSigningKey = new
                         SymmetricSecurityKey
                         (Encoding.UTF8.GetBytes
-                        (Configuration["Jwt:Key"]))
+                        (Configuration["Jwt:Key"]))   
                     };
                 }
                 );
@@ -99,6 +102,7 @@ namespace ApiExamen
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseCors("AllowOrigin");
+           // app.UseSession();
 
             if (env.IsDevelopment())
             {
@@ -107,9 +111,22 @@ namespace ApiExamen
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ApiExamen v1"));
             }
 
+
+            //app.Use(async (context, next) =>
+            //{
+            //    var token = context.Session.GetString("Token");
+            //    if (!string.IsNullOrEmpty(token))
+            //    {
+            //        context.Request.Headers.Add("Authorization", "Bearer " + token);
+            //    }
+            //    await next();
+            //});
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
@@ -119,15 +136,7 @@ namespace ApiExamen
             });
             // app.("http://localhost:4200/", "*", "*");
 
-            app.Use(async (context, next) =>
-            {
-                var token = context.Session.GetString("Token");
-                if (!string.IsNullOrEmpty(token))
-                {
-                    context.Request.Headers.Add("Authorization", "Bearer " + token);
-                }
-                await next();
-            });
+          
 
         }
     }

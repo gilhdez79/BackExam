@@ -21,9 +21,10 @@ namespace ApiExamen.Data
         public virtual DbSet<ArticuloTiendum> ArticuloTienda { get; set; }
         public virtual DbSet<Cliente> Clientes { get; set; }
         public virtual DbSet<ClienteArticulo> ClienteArticulos { get; set; }
-        public virtual DbSet<Tienda> Tienda { get; set; }
+        public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<Tienda2> Tienda { get; set; }
         public virtual DbSet<User> Users { get; set; }
-
+        public virtual DbSet<UserRole> UserRoles { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -117,7 +118,14 @@ namespace ApiExamen.Data
                     .HasConstraintName("FK_ClienteArticulo_Clientes");
             });
 
-            modelBuilder.Entity<Tienda>(entity =>
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.RolName).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<Tienda2>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("id");
 
@@ -129,17 +137,41 @@ namespace ApiExamen.Data
                     .HasMaxLength(50)
                     .IsUnicode(false);
             });
+
             modelBuilder.Entity<User>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Id)
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
+                entity.Property(e => e.EmailAddress).HasMaxLength(50);
 
-                entity.Property(e => e.Password)
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
+                entity.Property(e => e.GivenName).HasMaxLength(50);
+
+                entity.Property(e => e.IdUser).HasMaxLength(10);
+
+                entity.Property(e => e.Password).HasMaxLength(10);
+
+                entity.Property(e => e.Surname).HasMaxLength(50);
+
+                entity.Property(e => e.UserName).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<UserRole>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.Property(e => e.IdRol).HasColumnName("idRol");
+
+                entity.Property(e => e.IdUser).HasColumnName("idUser");
+
+                entity.HasOne(d => d.IdRolNavigation)
+                    .WithMany()
+                    .HasForeignKey(d => d.IdRol)
+                    .HasConstraintName("FK_UserRoles_Roles");
+
+                entity.HasOne(d => d.IdUserNavigation)
+                    .WithMany()
+                    .HasForeignKey(d => d.IdUser)
+                    .HasConstraintName("FK_UserRoles_Users");
             });
 
             OnModelCreatingPartial(modelBuilder);

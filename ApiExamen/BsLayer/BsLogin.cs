@@ -17,19 +17,32 @@ namespace ApiExamen.BsLayer
             _dbCntext = dbcontext;
         }
 
-        public OperationResult<Models.UserResponse> GetCUser(User user)
+        public OperationResult<User> GetCUser(UserLogin user)
         {
+            OperationResult<User> operationResult = new OperationResult<User>();
             try
             {
-                var existe = _dbCntext.Users.FirstOrDefault(u=>u.IdUser.Equals(user.IdUser) && u.Password.Equals(user.Password));
+                var existe = _dbCntext.Users.Where(u=>u.IdUser.Equals(user.UserName) && u.Password.Equals(user.Password))
+                             .Join( _dbCntext.UserRoles, a=> a.Id, b=>b.IdUser,(a,b)=> new {User = a, UserRole =b})
+                           
+
+                             .Select(s=> new User { 
+                                Id   = s.User.Id,
+                                EmailAddress = s.User.EmailAddress,
+                                GivenName = s.User.GivenName,
+                                IdUser = s.User.IdUser,
+                                UserName     = s.User.UserName,
+                                Surname = s.User.Surname,
+                                Rol = _dbCntext.Roles.FirstOrDefault(r=> r.Id == s.UserRole.IdRol).RolName
+                             });
 
                 if (existe != null)
                 {
-                    UserResponse ur = new UserResponse { Id = existe.Id, IdUser = existe.IdUser };
+                  //  UserResponse ur = new UserResponse { Id = existe.Id, IdUser = existe.IdUser };
 
                     operationResult.Success = true;
                     operationResult.InfoMensaje = new SystemMessage { Message = "Usuario Valido", TipoMensaje = TipoMensaje.Default };
-                    operationResult.SetSuccesObject(ur);
+                    operationResult.SetSuccesObject(existe.FirstOrDefault());
                 }
                 else
                 {

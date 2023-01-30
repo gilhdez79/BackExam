@@ -12,6 +12,6 @@ namespace ApiExamen.Data
         public DateTime? Fecha { get; set; }
 
         public virtual Articulo IdArticuloNavigation { get; set; }
-        public virtual Tienda IdTiendaNavigation { get; set; }
+        public virtual Tienda2 IdTiendaNavigation { get; set; }
     }
 }

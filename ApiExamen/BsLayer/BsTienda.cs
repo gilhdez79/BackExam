@@ -23,8 +23,8 @@ namespace ApiExamen.BsLayer
             try
             {
 
-                _dbCntext.Tienda.Add(new Data.Tienda
-                {
+                _dbCntext.Tienda.Add(new Tienda2 
+                {  
                     Sucursal = tienda.Sucursal,
                     Direccion = tienda.Direccion
                 });
@@ -109,8 +109,9 @@ namespace ApiExamen.BsLayer
             return operationResult;
         }
 
-        public OperationResult<Data.Tienda> GetTienda(int id)
+        public OperationResult<Data.Tienda2> GetTienda(int id)
         {
+            OperationResult<Data.Tienda2> operationResult = new OperationResult<Data.Tienda2>();
             try
             {
                 var existe = _dbCntext.Tienda.Find(id);
@@ -135,9 +136,9 @@ namespace ApiExamen.BsLayer
             return operationResult;
         }
 
-        public OperationResult<IEnumerable<Data.Tienda>> GetAllTienda()
+        public OperationResult<IEnumerable<Data.Tienda2>> GetAllTienda()
         {
-            OperationResult<IEnumerable<Data.Tienda>> operationResult = new OperationResult<IEnumerable<Data.Tienda>>();
+            OperationResult<IEnumerable<Data.Tienda2>> operationResult = new OperationResult<IEnumerable<Data.Tienda2>>();
 
             try
             {
